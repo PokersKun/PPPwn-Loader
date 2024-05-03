@@ -29,6 +29,7 @@ A Windows front-end desktop program based on [PPPwn](https://github.com/TheOffic
 ## Preview
 ![preview1](doc/preview1.png)
 ![preview2](doc/preview2.png)
+![preview3](doc/preview3.png)
 ## Acknowledgments
 [@TheOfficialFloW](https://github.com/TheOfficialFloW)
 [@Mochengvia](https://github.com/Mochengvia)

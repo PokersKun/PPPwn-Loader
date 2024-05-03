@@ -29,6 +29,7 @@
 ## 预览
 ![preview1](doc/preview1.png)
 ![preview2](doc/preview2.png)
+![preview3](doc/preview3.png)
 ## 鸣谢
 [@TheOfficialFloW](https://github.com/TheOfficialFloW)
 [@Mochengvia](https://github.com/Mochengvia)
