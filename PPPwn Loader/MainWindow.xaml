@@ -1,0 +1,113 @@
+﻿<pu:WindowX x:Class="PPPwn_Loader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PPPwn_Loader"
+        xmlns:pu="https://opensource.panuon.com/wpf-ui"
+        mc:Ignorable="d"
+        Title="PPPwn Loader"
+        Height="400"
+        Width="600"
+        BorderThickness="1"
+        Background="#FF4D5057"
+        ResizeMode="CanMinimize" Closing="WindowX_Closing" Closed="WindowX_Closed" Loaded="WindowX_Loaded"
+        WindowStartupLocation="CenterScreen" Foreground="White">
+    <Window.BorderBrush>
+        <LinearGradientBrush StartPoint="0,0"
+                             EndPoint="0,1">
+            <GradientStop Offset="0"
+                          Color="#6CBCEA" />
+            <GradientStop Offset="1"
+                          Color="#005869" />
+        </LinearGradientBrush>
+    </Window.BorderBrush>
+    <pu:WindowX.Resources>
+        <Style x:Key="RingStandardProgressBarStyle"
+           TargetType="pu:RingProgressBar">
+            <Setter Property="Minimum"
+                Value="0" />
+            <Setter Property="Maximum"
+                Value="100" />
+            <Setter Property="Width"
+                Value="140" />
+            <Setter Property="Height"
+                Value="140" />
+            <Setter Property="FontSize"
+                Value="20" />
+            <Setter Property="BorderThickness"
+                Value="15" />
+            <Setter Property="BorderBrush"
+                Value="#22FFFFFF" />
+            <Setter Property="BorderBrush"
+                Value="#226CBCEA" />
+            <Setter Property="Foreground"
+                Value="#6CBCEA" />
+            <Setter Property="IsPercentVisible"
+                Value="False" />
+            <Setter Property="pu:ShadowHelper.ShadowDepth"
+                Value="5" />
+            <Setter Property="pu:ShadowHelper.BlurRadius"
+                Value="15" />
+        </Style>
+    </pu:WindowX.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Height="50">
+                <ComboBox Width="120" Margin="10,0,0,20"
+                    x:Name="cbEthIf"
+                    SelectionChanged="cbEthIf_SelectionChanged"
+                    Background="#FF43464C"
+                    Foreground="#FFFFFF"
+                    FontSize="14"
+                    BorderThickness="0"
+                    pu:ComboBoxHelper.CornerRadius="5"
+                    pu:ComboBoxHelper.ItemsSelectedBackground="#FF3A3C41"
+                    pu:ComboBoxHelper.ItemsHoverBackground="#FF3A3C41"
+                    pu:DropDownHelper.ShadowColor="{x:Null}"
+                    />
+                <ComboBox Width="100" Margin="10,0,0,20"
+                    x:Name="cbFwVer"
+                    SelectionChanged="cbFwVer_SelectionChanged"
+                    Background="#FF43464C"
+                    Foreground="#FFFFFF"
+                    FontSize="14"
+                    BorderThickness="0"
+                    pu:ComboBoxHelper.CornerRadius="5"
+                    pu:ComboBoxHelper.ItemsSelectedBackground="#FF3A3C41"
+                    pu:ComboBoxHelper.ItemsHoverBackground="#FF3A3C41"
+                    pu:DropDownHelper.ShadowColor="{x:Null}"
+                    />
+            </StackPanel>
+            <Grid Height="200">
+                <Button Height="120"
+                    x:Name="btnStart"
+                    Click="btnStart_Click"
+                    Focusable="False"
+                    Width="120"
+                    Content="READY"
+                    Background="#FF43464C"
+                    Foreground="#FFFFFF"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    pu:ButtonHelper.ClickBackground="#FF3A3C41"
+                    pu:ButtonHelper.HoverBackground="#FF3A3C41"
+                    pu:ButtonHelper.CornerRadius="100" />
+                <pu:RingProgressBar x:Name="pbProgress" AnimationDuration="0:0:0.3" AnimationEasing="CubicOut"
+                                    Style="{StaticResource RingStandardProgressBarStyle}"
+                                    Value="0" />
+            </Grid>
+            <Grid Height="80">
+                <StackPanel Orientation="Vertical">
+                    <Button x:Name="btnFile" pu:ButtonHelper.HoverForeground="Azure" Click="btnFile_Click" Content="Select Payload File..." FontSize="12" Background="Transparent" Width="500" Margin="0,10,0,0" HorizontalContentAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
+                    <Label x:Name="lbStatus" Content=" " FontSize="16" FontWeight="Bold" Background="Transparent" Foreground="White" Width="500" Margin="0,0,0,0" HorizontalContentAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+        <Label Grid.Row="2" FontSize="10" HorizontalContentAlignment="Center" Background="Transparent" Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Content="@TheOfficialFloW @PokerS" />
+    </Grid>
+</pu:WindowX>
