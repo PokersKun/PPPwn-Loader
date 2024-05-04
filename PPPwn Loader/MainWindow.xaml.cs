@@ -58,6 +58,14 @@ namespace PPPwn_Loader
             InitConfig();
             StatusChanged();
             Task.Run(async () => await CloseAllPppwnProcessesAsync());
+
+            if (!IsNpcapInstalled())
+            {
+                if (MessageBoxX.Show(this, "Checked that Npcap is not installed, will start installation soon", "Tip", MessageBoxButton.OK) != MessageBoxResult.Cancel)
+                {
+                    Task.Run(async () => await InstallNpcap());
+                }
+            }
         }
 
         private void GetVersion()
@@ -386,6 +394,38 @@ namespace PPPwn_Loader
         {
             await CloseAllPppwnProcessesAsync();
             Environment.Exit(0);
+        }
+
+        private bool IsNpcapInstalled()
+        {
+            // Npcap安装后会在注册表中创建一个相关的项
+            // 检查这个项是否存在来判断Npcap是否已经安装
+            RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Npcap", false);
+            return key != null;
+        }
+
+        private async Task InstallNpcap()
+        {
+            try
+            {
+                string npcapFath = @".\Drivers\npcap-1.79.exe";
+
+                // 创建进程对象
+                using (Process process = new Process())
+                {
+                    process.StartInfo.FileName = npcapFath; // 设置要执行的程序路径
+
+                    // 异步启动进程
+                    process.Start();
+
+                    // 等待进程结束
+                    await Task.Run(() => process.WaitForExit());
+                }
+            }
+            catch (Exception ex)
+            {
+                Toast(ex.Message);
+            }
         }
     }
 }

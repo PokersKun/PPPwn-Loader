@@ -114,6 +114,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
+    <Content Include="Drivers\npcap-1.79.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="PPPwn\pppwn.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
