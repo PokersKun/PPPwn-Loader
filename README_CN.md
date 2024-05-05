@@ -25,11 +25,13 @@
     - 在 `Proxy 服务器` 中选择 `不使用`
     - 单击 `测试互联网连接` 与计算机通信
 7. 此时您可以看到 `PPPwn Loader` 的界面产生变化，它将开始正式运行 PPPwn，请耐心等待运行结果，如最后显示 "Done" 则表示加载成功，您将会在 PS4 上看到运行结果。
-8. 请记住当前漏洞的成功率并不高，如 PPPwn 过程中没有响应或出现失败提示，请点击 `READY` 按钮停止您的 PPPwn 并重头开始，此时 PS4 也需要重新点击“测试互联网连接”。
+8. 请记住当前漏洞的成功率并不高，如 PPPwn 过程中出现失败提示，默认情况下 PPPwn Loader 将会自动重新开始 PPPwn，您只需要按下手柄上的 `×` 然后按下 `○` 即可。如 PPPwn Loader 没有响应，请点击 `READY` 按钮停止您的 PPPwn 并重头开始，此时 PS4 也需要重新点击 `测试互联网连接`。
 ## 预览
 ![preview1](doc/preview1.png)
 ![preview2](doc/preview2.png)
 ![preview3](doc/preview3.png)
+![preview4](doc/preview4.png)
+![preview5](doc/preview5.png)
 ## 鸣谢
 [@TheOfficialFloW](https://github.com/TheOfficialFloW)
 [@Mochengvia](https://github.com/Mochengvia)

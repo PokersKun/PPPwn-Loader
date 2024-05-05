@@ -29,6 +29,12 @@
                                 <Setter Property="FontWeight" Value="Bold" />
                                 <Setter Property="Foreground" Value="#FFFFFF" />
                                 <Setter Property="Background" Value="#FF43464C" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsDefault" Value="True">
+                                        <Setter Property="Foreground" Value="#FFFFFF" />
+                                        <Setter Property="Background" Value="#FF43464C" />
+                                    </Trigger>
+                                </Style.Triggers>
                             </Style>
                         </pu:MessageBoxXSettings.ButtonStyle>
                         <pu:MessageBoxXSettings.ContentTemplate>

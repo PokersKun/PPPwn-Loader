@@ -2,25 +2,14 @@
 using Panuon.WPF.UI;
 using PPPwn_Loader.Tools;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PPPwn_Loader
 {
@@ -39,13 +28,15 @@ namespace PPPwn_Loader
             STATE_RUNNING
         }
 
-        private string[] allFwVersion = { "9.00", "9.03", "9.04", "9.50", "9.60", "10.00", "10.01", "10.50", "10.70", "10.71", "11.00" };
+        private string[] allFwVersion = { "8.50", "9.00", "9.03", "9.04", "9.50", "9.60", "10.00", "10.01", "10.50", "10.70", "10.71", "11.00" };
 
         private RunningState runningState = RunningState.STATE_NOT_READY;
 
         private string ethName = null;
         private string fwVersion = null;
         private string payloadPath = null;
+
+        private bool isFirstLine = true;
 
         public MainWindow()
         {
@@ -55,7 +46,7 @@ namespace PPPwn_Loader
         private void WindowX_Loaded(object sender, RoutedEventArgs e)
         {
             GetVersion();
-            InitConfig();
+            RestoreConfig();
             StatusChanged();
             Task.Run(async () => await CloseAllPppwnProcessesAsync());
 
@@ -74,64 +65,18 @@ namespace PPPwn_Loader
             Title += " v" + version.Major + "." + version.Minor;
         }
 
-        private void InitConfig()
+        private void RestoreConfig()
         {
-            // 获取系统上的所有网络接口
-            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-            // 遍历所有网络接口
-            foreach (NetworkInterface networkInterface in networkInterfaces)
-            {
-                // 如果是以太网卡，则将其名称添加到ComboBox中
-                if (networkInterface.NetworkInterfaceType == NetworkInterfaceType.Ethernet)
-                {
-                    cbEthIf.Items.Add(networkInterface.Name);
-                }
-            }
-
-            if (cbEthIf.Items.Count > 0)
-            {
-                ethName = ConfigHelper.GetAppConfig("ethName");
-                if (string.IsNullOrEmpty(ethName) || !cbEthIf.Items.Contains(ethName))
-                {
-                    cbEthIf.SelectedIndex = 0;
-                    ethName = cbEthIf.SelectedItem as string;
-                    ConfigHelper.UpdateAppConfig("fwVersion", fwVersion);
-                }
-                else
-                {
-                    cbEthIf.Text = ethName;
-                }
-            }
-            else
-            {
-                if (MessageBoxX.Show(this, "No Ethernet card found in your system", "Warning", MessageBoxButton.OK) != MessageBoxResult.Cancel)
-                {
-                    Close();
-                }
-            }
-
-            cbFwVer.ItemsSource = allFwVersion;
+            ethName = ConfigHelper.GetAppConfig("ethName");
             fwVersion = ConfigHelper.GetAppConfig("fwVersion");
-            if (string.IsNullOrEmpty(fwVersion))
-            {
-                cbFwVer.SelectedIndex = 0;
-                fwVersion = cbFwVer.SelectedItem as string;
-                ConfigHelper.UpdateAppConfig("fwVersion", fwVersion);
-            }
-            else
-            {
-                cbFwVer.Text = fwVersion;
-            }
-
             payloadPath = ConfigHelper.GetAppConfig("payloadPath");
-            if (string.IsNullOrEmpty(payloadPath))
-            {
-                btnFile.Content = "Select Payload File...";
-            }
-            else
+            if (!string.IsNullOrEmpty(payloadPath))
             {
                 btnFile.Content = "Payload File: " + payloadPath;
+            }
+            else
+            {
+                btnFile.Content = "Select Payload File...";
             }
         }
 
@@ -218,8 +163,17 @@ namespace PPPwn_Loader
                                     btnStart.Content = "DONE";
                                     pbProgress.Value = 100;
                                 }
-                                Console.WriteLine(args.Data);
-                                lbStatus.Content = args.Data;
+                                string newItem = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " - " + args.Data;
+                                if (isFirstLine)
+                                {
+                                    isFirstLine = false;
+                                    tbConsole.Text += newItem;
+                                }
+                                else
+                                {
+                                    tbConsole.Text += "\n" + newItem;
+                                }
+                                btnStatus.Content = args.Data;
                             });
                         }
                     };
@@ -233,10 +187,21 @@ namespace PPPwn_Loader
                     // 等待进程结束
                     await Task.Run(() => process.WaitForExit());
 
-                    if (lbStatus.Content.ToString().Contains("failed") || lbStatus.Content.ToString().Contains("Done"))
+                    if (btnStatus.Content.ToString().Contains("failed"))
                     {
-                        MessageBoxX.Show(this, lbStatus.Content.ToString(), "Result", MessageBoxButton.OK);
-                        RefreshUI(false);
+                        var result = MessageBoxX.Show(this, btnStatus.Content.ToString() + " Retry it?", "Result", MessageBoxButton.OKCancel, MessageBoxIcon.None, DefaultButton.YesOK, 5);
+                        if (result == MessageBoxResult.Cancel)
+                        {
+                            RefreshUI(false);
+                        }
+                        else
+                        {
+                            await StartPPPwn();
+                        }
+                    }
+                    else if (btnStatus.Content.ToString().Contains("Done"))
+                    {
+                        runningState = RunningState.STATE_READY;
                     }
                 }
             }
@@ -290,7 +255,7 @@ namespace PPPwn_Loader
                     await StartPPPwn();
                     break;
                 case RunningState.STATE_RUNNING:
-                    MessageBoxResult result = MessageBoxX.Show(this, "PPPwn is on the run, confirmed exit?", "Tip", MessageBoxButton.OKCancel);
+                    var result = MessageBoxX.Show(this, "PPPwn is on the run, confirmed exit?", "Tip", MessageBoxButton.OKCancel);
                     if (result == MessageBoxResult.OK)
                     {
                         btnStart.IsEnabled = false;
@@ -305,20 +270,6 @@ namespace PPPwn_Loader
         {
             await CloseAllPppwnProcessesAsync();
             RefreshUI(false);
-        }
-
-        private void cbEthIf_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ethName = (string)cbEthIf.SelectedItem;
-            ConfigHelper.UpdateAppConfig("ethName", ethName);
-            StatusChanged();
-        }
-
-        private void cbFwVer_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            fwVersion = (string)cbFwVer.SelectedItem;
-            ConfigHelper.UpdateAppConfig("fwVersion", fwVersion);
-            StatusChanged();
         }
 
         private void btnFile_Click(object sender, RoutedEventArgs e)
@@ -336,13 +287,17 @@ namespace PPPwn_Loader
             }
             else
             {
-                if (string.IsNullOrEmpty(ethName))
+                if (string.IsNullOrEmpty(ethName) || string.IsNullOrEmpty(fwVersion))
                 {
-                    runningState = RunningState.STATE_REQ_INTERFACE;
-                }
-                if (string.IsNullOrEmpty(fwVersion))
-                {
-                    runningState = RunningState.STATE_REQ_FW_VER;
+                    if (string.IsNullOrEmpty(ethName))
+                    {
+                        runningState = RunningState.STATE_REQ_INTERFACE;
+                    }
+                    if (string.IsNullOrEmpty(fwVersion))
+                    {
+                        runningState = RunningState.STATE_REQ_FW_VER;
+                    }
+                    OpenSettings(true);
                 }
                 if (string.IsNullOrEmpty(payloadPath))
                 {
@@ -356,22 +311,20 @@ namespace PPPwn_Loader
         {
             if (isRunning)
             {
-                cbEthIf.IsEnabled = false;
-                cbFwVer.IsEnabled = false;
                 btnFile.IsEnabled = false;
+                btnSettings.IsEnabled = false;
                 btnStart.Content = "WAIT";
                 btnStart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6CBCEA"));
-                lbStatus.Content = "Waiting for PPPoE connection...";
+                btnStatus.Content = "Waiting for PPPoE connection...";
                 runningState = RunningState.STATE_RUNNING;
             }
             else
             {
-                cbEthIf.IsEnabled = true;
-                cbFwVer.IsEnabled = true;
                 btnFile.IsEnabled = true;
+                btnSettings.IsEnabled = true;
                 btnStart.Content = "START";
                 btnStart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                lbStatus.Content = "";
+                btnStatus.Content = "Ready to run Exploit.";
                 runningState = RunningState.STATE_READY;
             }
             btnStart.IsEnabled = true;
@@ -382,7 +335,7 @@ namespace PPPwn_Loader
         {
             if (runningState == RunningState.STATE_RUNNING)
             {
-                MessageBoxResult result = MessageBoxX.Show(this, "PPPwn is on the run, confirmed exit?", "Tip", MessageBoxButton.OKCancel);
+                var result = MessageBoxX.Show(this, "PPPwn is on the run, confirmed exit?", "Tip", MessageBoxButton.OKCancel);
                 if (result == MessageBoxResult.Cancel || result == MessageBoxResult.None)
                 {
                     e.Cancel = true;
@@ -426,6 +379,36 @@ namespace PPPwn_Loader
             {
                 Toast(ex.Message);
             }
+        }
+
+        private void btnStatus_Click(object sender, RoutedEventArgs e)
+        {
+            gdConsole.Visibility = Visibility.Visible;
+        }
+
+        private void btnConsoleExit_Click(object sender, RoutedEventArgs e)
+        {
+            gdConsole.Visibility = Visibility.Hidden;
+        }
+
+        private void tbConsole_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            tbConsole.ScrollToEnd();
+        }
+
+        private void OpenSettings(bool isAuto)
+        {
+            var settings = new Settings(isAuto);
+            if (settings.ShowDialog() == false)
+            {
+                RestoreConfig();
+                StatusChanged();
+            }
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            OpenSettings(false);
         }
     }
 }

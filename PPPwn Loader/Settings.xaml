@@ -1,0 +1,112 @@
+﻿<pu:WindowX x:Class="PPPwn_Loader.Settings"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:local="clr-namespace:PPPwn_Loader"
+            xmlns:pu="https://opensource.panuon.com/wpf-ui"
+            mc:Ignorable="d"
+            Title="Settings"
+            Height="220"
+            Width="360"
+            BorderThickness="1"
+            Background="#FF4D5057"
+            ResizeMode="NoResize"
+            Loaded="WindowX_Loaded"
+            WindowStartupLocation="CenterScreen"
+            Foreground="White">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition Height="10" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+        <Label Content="Interface"
+               Foreground="White"
+               FontSize="14"
+               Grid.Row="1"
+               Background="Transparent"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center" />
+        <ComboBox Width="150"
+                  Height="30"
+                  Margin="10,0,0,0"
+                  Grid.Column="1"
+                  Grid.Row="1"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  x:Name="cbEthIf"
+                  Background="#FF43464C"
+                  Foreground="#FFFFFF"
+                  FontSize="14"
+                  SelectionChanged="cbEthIf_SelectionChanged"
+                  BorderThickness="0"
+                  pu:ComboBoxHelper.CornerRadius="5"
+                  pu:ComboBoxHelper.ItemsSelectedBackground="#FF3A3C41"
+                  pu:ComboBoxHelper.ItemsHoverBackground="#FF3A3C41"
+                  pu:DropDownHelper.ShadowColor="{x:Null}" />
+        <Label Content="Firmware"
+               Foreground="White"
+               FontSize="14"
+               Grid.Row="2"
+               Background="Transparent"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Center" />
+        <ComboBox Width="150"
+                  Height="30"
+                  Margin="10,0,0,0"
+                  Grid.Column="1"
+                  Grid.Row="2"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Center"
+                  x:Name="cbFwVer"
+                  Background="#FF43464C"
+                  Foreground="#FFFFFF"
+                  FontSize="14"
+                  SelectionChanged="cbFwVer_SelectionChanged"
+                  BorderThickness="0"
+                  pu:ComboBoxHelper.CornerRadius="5"
+                  pu:ComboBoxHelper.ItemsSelectedBackground="#FF3A3C41"
+                  pu:ComboBoxHelper.ItemsHoverBackground="#FF3A3C41"
+                  pu:DropDownHelper.ShadowColor="{x:Null}" />
+        <Button x:Name="btnCheck"
+                Click="btnCheck_Click"
+                Grid.Column="1"
+                Content="Check for updates"
+                Background="#FF43464C"
+                Foreground="#FFFFFF"
+                FontSize="12"
+                Margin="10,0,0,0"
+                BorderThickness="0"
+                Width="120"
+                Height="30"
+                pu:ButtonHelper.CornerRadius="5"
+                pu:ButtonHelper.HoverBackground="#FF3A3C41"
+                pu:ButtonHelper.ClickBackground="#FF3A3C41"
+                HorizontalAlignment="Left"
+                Grid.Row="3" />
+        <Button x:Name="btnApply"
+                Click="btnApply_Click"
+                Grid.Column="1"
+                Content="Apply"
+                Background="#FF43464C"
+                Foreground="#FFFFFF"
+                FontSize="12"
+                Margin="0,0,20,0"
+                BorderThickness="0"
+                Width="80"
+                Height="30"
+                pu:ButtonHelper.CornerRadius="5"
+                pu:ButtonHelper.HoverBackground="#FF3A3C41"
+                pu:ButtonHelper.ClickBackground="#FF3A3C41"
+                HorizontalAlignment="Right"
+                Grid.Row="4" />
+    </Grid>
+</pu:WindowX>

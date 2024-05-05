@@ -25,11 +25,13 @@ A Windows front-end desktop program based on [PPPwn](https://github.com/TheOffic
     - Choose `Do Not Use` for `Proxy Server`
     - Click `Test Internet Connection` to communicate with your computer
 7. At this point you will see a change in the `PPPwn Loader` interface, it will start to run PPPwn, please be patient and wait for the result, if it finally shows `Done` it means it was loaded successfully, you will see the result on your PS4.
-8. Please keep in mind that the success rate of the current exploit is not very high, if there is no response or a failure message during the PPPwn process, please click the `READY` button to stop your PPPwn and start over, at this point the PS4 will also need to click `Test Internet Connection` again.
+8. Keep in mind that the success rate of the current exploit is not very high, and if the PPPwn process fails, by default the PPPwn Loader will automatically restart the PPPwn by pressing the `×` on the joystick and then the `○`. If the PPPwn Loader does not respond, please click the `READY` button to stop your PPPwn and restart it, and then the PS4 will also need to click `Test Internet Connection` again.
 ## Preview
 ![preview1](doc/preview1.png)
 ![preview2](doc/preview2.png)
 ![preview3](doc/preview3.png)
+![preview4](doc/preview4.png)
+![preview5](doc/preview5.png)
 ## Acknowledgments
 [@TheOfficialFloW](https://github.com/TheOfficialFloW)
 [@Mochengvia](https://github.com/Mochengvia)
