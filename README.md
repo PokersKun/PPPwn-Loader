@@ -9,12 +9,12 @@ A Windows front-end desktop program based on [PPPwn](https://github.com/TheOffic
 ## Requirements
 - A Windows computer (preferably Windows 10 x64 or above)
 - A network cable
-- A PS4 (system version 9.00 ~ 11.00)
+- A PS4 (system version 7.50 ~ 11.00)
 ## Use
 1. Download the latest build of `PPPwn Loader` from [Release](https://github.com/PokersKun/PPPwn-Loader/releases).
 2. Unzip the whole thing and run `PPPwn Loader.exe`, in the first drop down box select the Ethernet port you are connecting to the PS4 (I've tried connecting directly to the PS4 through a cable with better success).
 3. Select your PS4's current system version in the second drop-down box (the supported versions in there will change as [PPPwn](https://github.com/TheOfficialFloW/PPPwn) is updated).
-4. Click `Select Payload File...` to select the Payload File you need to load (if your current PS4 version does not support third-party Payload Files, you can also try to use the `stage2.bin` file in the `payload` folder for testing purposes to verify that your PS4 can use this exploit).
+4. Click `Select Stage2 File...` Select the `stage2.bin` file you want to load, either from @LightningMods's [PPPwn](https://github.com/LightningMods/PPPwn/releases) branch for various functions, or try using the `stage2.bin` file in the `stage2` folder in the `PPPwn` directory for testing purposes to verify that your PS4 is capable of using the exploit.
 5. The `READY` button on the interface should change to a `START` button, and when you click it, you will be prompted with the message `Waiting for PPPoE connection...`.
 6. Follow [PPPwn#usage](https://github.com/TheOfficialFloW/PPPwn?tab=readme-ov-file#usage) to open a PPPoE connection on your PS4:
     - Go to `Settings` and then `Network`

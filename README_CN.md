@@ -9,12 +9,14 @@
 ## 需求
 - 一台 Windows 电脑（最好 Windows 10 x64 或以上系统）
 - 一条网线
-- 一台 PS4（系统版本 9.00 ~ 11.00）
+- 一台 PS4（系统版本 7.50 ~ 11.00）
 ## 使用
 1. 从 [Release](https://github.com/PokersKun/PPPwn-Loader/releases) 下载 `PPPwn Loader` 最新的生成版本。
 2. 完整解压后运行 `PPPwn Loader.exe`，在第一个下拉框选择选择您连接到 PS4 的以太网口（我试过用通过网线直连 PS4 成功率会更高）。
 3. 在第二个下拉框中选择您 PS4 当前的系统版本（里面所支持的版本会随着 [PPPwn](https://github.com/TheOfficialFloW/PPPwn) 的更新而变化）。
-4. 点击 `Select Payload File...` 选择您所需要加载的 Payload 文件（如您当前的 PS4 版本未支持第三方功能的 Payload 文件，也可以尝试使用 `payload` 文件夹中用于测试的 `stage2.bin` 文件来验证您的 PS4 是否可以使用该漏洞）。
+4. 点击 `Select Stage2 File...` 选择您所需要加载的 stage2.bin 文件（可以从 @LightningMods
+ 的 [PPPwn](https://github.com/LightningMods/PPPwn/releases) 分支获得各种功能的 stage2.bin文件，也可以尝试使用 `stage2` 文件夹中用于测试的 `stage2.bin` 文件来验证您的 PS4 是否可以使用该漏洞）。
+4. 点击 `Select Stage2 File...` 选择您所需要加载的 `stage2.bin` 文件，可以从 @LightningMods 的 [PPPwn](https://github.com/LightningMods/PPPwn/releases) 分支获得各种功能的 `stage2.bin` 文件，也可以尝试使用 `PPPwn` 目录下 `stage2` 文件夹中用于测试的 `stage2.bin` 文件来验证您的 PS4 是否可以使用该漏洞。
 5. 界面上的 `READY` 按钮应该会变成 `START` 按钮，此时点击它，会提示 `Waiting for PPPoE connection...`。
 6. 遵循 [PPPwn#usage](https://github.com/TheOfficialFloW/PPPwn?tab=readme-ov-file#usage) 在 PS4 上打开 PPPoE 连接：
     - 转到 `设定`，然后转到 `网络`
