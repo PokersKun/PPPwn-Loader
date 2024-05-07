@@ -19,6 +19,13 @@
             Foreground="White">
     <pu:WindowXCaption.ExtendControl>
         <StackPanel Orientation="Horizontal">
+            <Button x:Name="btnConsole"
+                    Click="btnConsole_Click"
+                    FontSize="18"
+                    ToolTip="Console"
+                    Style="{StaticResource {x:Static pu:WindowXCaption.MinimizeButtonStyleKey}}"
+                    FontFamily="{StaticResource PanuonIconFont}"
+                    Content="&#xe951;" />
             <Button x:Name="btnSettings"
                     Click="btnSettings_Click"
                     FontSize="18"
@@ -80,24 +87,6 @@
             <Border BorderThickness="1"
                     BorderBrush="DarkGray">
                 <Grid>
-                    <Label Background="Transparent"
-                           Foreground="White"
-                           Content="PPPwn Console"
-                           FontSize="16"
-                           Margin="5,2,0,0" />
-                    <Button x:Name="btnConsoleExit"
-                            Panel.ZIndex="1000"
-                            Click="btnConsoleExit_Click"
-                            Width="30"
-                            Height="30"
-                            pu:IconHelper.FontSize="14"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Top"
-                            Background="Transparent"
-                            Foreground="White"
-                            pu:IconHelper.FontFamily="{StaticResource PanuonIconFont}"
-                            pu:ButtonHelper.Icon="&#xe92d;"
-                            pu:ButtonHelper.HoverForeground="LightGray" />
                     <TextBox x:Name="tbConsole"
                              TextWrapping="Wrap"
                              VerticalScrollBarVisibility="Auto"
@@ -111,12 +100,12 @@
                              FontSize="13"
                              Background="Transparent"
                              Foreground="Lime"
-                             Margin="3,30,5,10" />
+                             Margin="12" />
                 </Grid>
             </Border>
         </Grid>
         <StackPanel Orientation="Vertical">
-            <Grid Height="250"
+            <Grid Height="230"
                   Margin="0,20,0,0">
                 <Button Height="120"
                         x:Name="btnStart"
@@ -144,29 +133,33 @@
                         ToolTip="Select File"
                         pu:ButtonHelper.HoverForeground="#99B4D1"
                         Click="btnFile_Click"
-                        Content="Select Payload File..."
+                        Content="Select Stage2 File..."
                         FontSize="12"
                         Background="Transparent"
                         HorizontalContentAlignment="Center"
                         Foreground="{DynamicResource {x:Static SystemColors.InactiveCaptionBrushKey}}" />
-                <Button x:Name="btnStatus"
-                        ToolTip="Show Console"
-                        pu:ButtonHelper.HoverForeground="LightGray"
-                        Click="btnStatus_Click"
-                        Content="Ready to run Exploit."
-                        FontSize="16"
-                        FontWeight="Bold"
-                        Background="Transparent"
-                        Foreground="White"
-                        Margin="0,5,0,0"
-                        HorizontalContentAlignment="Center" />
+                <Label x:Name="lbStatus"
+                       Content="Ready to run Exploit."
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Background="Transparent"
+                       Foreground="White"
+                       Margin="0,5,0,0"
+                       HorizontalContentAlignment="Center" />
             </WrapPanel>
         </StackPanel>
         <Label Grid.Row="2"
                FontSize="10"
-               HorizontalContentAlignment="Center"
+               HorizontalContentAlignment="Left"
                Background="Transparent"
                Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
                Content="@TheOfficialFloW @PokerS" />
+        <Label x:Name="lbPPPwnVer"
+               Grid.Row="2"
+               FontSize="10"
+               HorizontalContentAlignment="Right"
+               Background="Transparent"
+               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+               Content="PPPwn Version: " />
     </Grid>
 </pu:WindowX>

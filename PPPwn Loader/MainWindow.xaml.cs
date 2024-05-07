@@ -23,7 +23,7 @@ namespace PPPwn_Loader
             STATE_NOT_READY,
             STATE_REQ_INTERFACE,
             STATE_REQ_FW_VER,
-            STATE_REQ_PAYLOAD,
+            STATE_REQ_STAGE2,
             STATE_READY,
             STATE_RUNNING
         }
@@ -34,7 +34,7 @@ namespace PPPwn_Loader
 
         private string ethName = null;
         private string fwVersion = null;
-        private string payloadPath = null;
+        private string stage2Path = null;
 
         private bool isFirstLine = true;
 
@@ -69,24 +69,25 @@ namespace PPPwn_Loader
         {
             ethName = ConfigHelper.GetAppConfig("ethName");
             fwVersion = ConfigHelper.GetAppConfig("fwVersion");
-            payloadPath = ConfigHelper.GetAppConfig("payloadPath");
-            if (!string.IsNullOrEmpty(payloadPath))
+            stage2Path = ConfigHelper.GetAppConfig("stage2Path");
+            lbPPPwnVer.Content = "PPPwn Version: v" + ConfigHelper.GetAppConfig("pppwnVer");
+            if (!string.IsNullOrEmpty(stage2Path))
             {
-                btnFile.Content = "Payload File: " + payloadPath;
+                btnFile.Content = "Stage2 File: " + stage2Path;
             }
             else
             {
-                btnFile.Content = "Select Payload File...";
+                btnFile.Content = "Select Stage2 File...";
             }
         }
 
-        private void LoadPayloadFile()
+        private void LoadStage2File()
         {
             // 创建文件选择框对象
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
             // 设置过滤条件为.bin文件
-            openFileDialog.Filter = "Payload File (*.bin)|*.bin|All files (*.*)|*.*";
+            openFileDialog.Filter = "Stage2 File (*.bin)|*.bin|All files (*.*)|*.*";
 
             // 打开文件选择框
             bool? result = openFileDialog.ShowDialog();
@@ -95,13 +96,13 @@ namespace PPPwn_Loader
             if (result == true)
             {
                 // 获取选定的文件路径并保存到全局变量中
-                payloadPath = openFileDialog.FileName;
-                btnFile.Content = "Payload File: " + payloadPath;
-                ConfigHelper.UpdateAppConfig("payloadPath", payloadPath);
+                stage2Path = openFileDialog.FileName;
+                btnFile.Content = "Stage2 File: " + stage2Path;
+                ConfigHelper.UpdateAppConfig("stage2Path", stage2Path);
             }
             else
             {
-                Toast("The Payload File is not selected.");
+                Toast("The Stage2 File is not selected.");
             }
         }
 
@@ -111,7 +112,7 @@ namespace PPPwn_Loader
             {
                 string pppwnFath = @".\PPPwn\pppwn.exe";
                 string newFwVer = fwVersion.Replace(".", "");
-                string arguments = $"--interface=\"{ethName}\" --fw={newFwVer} --stage1=.\\PPPwn\\payload\\stage1.bin --stage2={payloadPath}";
+                string arguments = $"--interface=\"{ethName}\" --fw={newFwVer} --stage1=.\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2={stage2Path}";
 
                 // 创建进程对象
                 using (Process process = new Process())
@@ -173,7 +174,7 @@ namespace PPPwn_Loader
                                 {
                                     tbConsole.Text += "\n" + newItem;
                                 }
-                                btnStatus.Content = args.Data;
+                                lbStatus.Content = args.Data;
                             });
                         }
                     };
@@ -187,9 +188,9 @@ namespace PPPwn_Loader
                     // 等待进程结束
                     await Task.Run(() => process.WaitForExit());
 
-                    if (btnStatus.Content.ToString().Contains("failed"))
+                    if (lbStatus.Content.ToString().Contains("failed"))
                     {
-                        var result = MessageBoxX.Show(this, btnStatus.Content.ToString() + " Retry it?", "Result", MessageBoxButton.OKCancel, MessageBoxIcon.None, DefaultButton.YesOK, 5);
+                        var result = MessageBoxX.Show(this, lbStatus.Content.ToString() + " Retry it?", "Result", MessageBoxButton.OKCancel, MessageBoxIcon.None, DefaultButton.YesOK, 5);
                         if (result == MessageBoxResult.Cancel)
                         {
                             RefreshUI(false);
@@ -199,7 +200,7 @@ namespace PPPwn_Loader
                             await StartPPPwn();
                         }
                     }
-                    else if (btnStatus.Content.ToString().Contains("Done"))
+                    else if (lbStatus.Content.ToString().Contains("Done"))
                     {
                         runningState = RunningState.STATE_READY;
                     }
@@ -248,8 +249,8 @@ namespace PPPwn_Loader
                 case RunningState.STATE_REQ_FW_VER:
                     Toast("Please select a Firmware Verion.");
                     break;
-                case RunningState.STATE_REQ_PAYLOAD:
-                    Toast("Please select a Paykoad File.");
+                case RunningState.STATE_REQ_STAGE2:
+                    Toast("Please select a Stage2 File.");
                     break;
                 case RunningState.STATE_READY:
                     await StartPPPwn();
@@ -274,13 +275,13 @@ namespace PPPwn_Loader
 
         private void btnFile_Click(object sender, RoutedEventArgs e)
         {
-            LoadPayloadFile();
+            LoadStage2File();
             StatusChanged();
         }
 
         private void StatusChanged()
         {
-            if (!string.IsNullOrEmpty(ethName) && !string.IsNullOrEmpty(fwVersion) && !string.IsNullOrEmpty(payloadPath))
+            if (!string.IsNullOrEmpty(ethName) && !string.IsNullOrEmpty(fwVersion) && !string.IsNullOrEmpty(stage2Path))
             {
                 runningState = RunningState.STATE_READY;
                 btnStart.Content = "START";
@@ -299,9 +300,9 @@ namespace PPPwn_Loader
                     }
                     OpenSettings(true);
                 }
-                if (string.IsNullOrEmpty(payloadPath))
+                if (string.IsNullOrEmpty(stage2Path))
                 {
-                    runningState = RunningState.STATE_REQ_PAYLOAD;
+                    runningState = RunningState.STATE_REQ_STAGE2;
                 }
                 btnStart.Content = "READY";
             }
@@ -315,7 +316,7 @@ namespace PPPwn_Loader
                 btnSettings.IsEnabled = false;
                 btnStart.Content = "WAIT";
                 btnStart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6CBCEA"));
-                btnStatus.Content = "Waiting for PPPoE connection...";
+                lbStatus.Content = "Waiting for PPPoE connection...";
                 runningState = RunningState.STATE_RUNNING;
             }
             else
@@ -324,7 +325,7 @@ namespace PPPwn_Loader
                 btnSettings.IsEnabled = true;
                 btnStart.Content = "START";
                 btnStart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                btnStatus.Content = "Ready to run Exploit.";
+                lbStatus.Content = "Ready to run Exploit.";
                 runningState = RunningState.STATE_READY;
             }
             btnStart.IsEnabled = true;
@@ -381,14 +382,9 @@ namespace PPPwn_Loader
             }
         }
 
-        private void btnStatus_Click(object sender, RoutedEventArgs e)
+        private void btnConsole_Click(object sender, RoutedEventArgs e)
         {
-            gdConsole.Visibility = Visibility.Visible;
-        }
-
-        private void btnConsoleExit_Click(object sender, RoutedEventArgs e)
-        {
-            gdConsole.Visibility = Visibility.Hidden;
+            gdConsole.Visibility = gdConsole.IsVisible ? Visibility.Hidden : Visibility.Visible;
         }
 
         private void tbConsole_TextChanged(object sender, TextChangedEventArgs e)

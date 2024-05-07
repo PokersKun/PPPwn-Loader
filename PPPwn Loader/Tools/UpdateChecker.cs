@@ -69,6 +69,22 @@ namespace PPPwn_Loader.Tools
             });
         }
 
+        public void GetNewVersion(Action<LatestReleases> callback)
+        {
+            CheckUpdate((latest) =>
+            {
+                int result = VersionComparer.CompareVersion(latest.tag_name, this.CurrentVersion);
+                if (result > 0)
+                {
+                    callback(latest);
+                }
+                else
+                {
+                    callback(null);
+                }
+            });
+        }
+
 
         public Object OpenBrowserToReleases()
         {

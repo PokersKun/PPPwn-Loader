@@ -46,6 +46,78 @@
                             </DataTemplate>
                         </pu:MessageBoxXSettings.ContentTemplate>
                     </pu:MessageBoxXSettings>
+                    <pu:PendingBoxSettings x:Key="pendingSettings">
+                        <pu:PendingBoxSettings.WindowStyle>
+                            <Style TargetType="Window"
+                                   BasedOn="{StaticResource {x:Static pu:PendingBox.WindowStyleKey}}">
+                                <Setter Property="Padding"
+                                        Value="20,0,20,20" />
+                                <Setter Property="MinWidth"
+                                        Value="300" />
+                                <Setter Property="MinHeight"
+                                        Value="180" />
+                                <Setter Property="MaxWidth"
+                                        Value="300" />
+                                <Setter Property="MaxHeight"
+                                        Value="180" />
+                                <Setter Property="SizeToContent"
+                                        Value="Manual" />
+                                <Setter Property="Foreground"
+                                        Value="White" />
+                                <Setter Property="pu:WindowXCaption.Background"
+                                        Value="Transparent" />
+                                <Setter Property="BorderBrush"
+                                        Value="Gray" />
+                                <Setter Property="BorderThickness"
+                                        Value="1" />
+                                <Setter Property="Background"
+                                        Value="#1E1E1E" />
+                            </Style>
+                        </pu:PendingBoxSettings.WindowStyle>
+                        <pu:PendingBoxSettings.SpinStyle>
+                            <Style TargetType="pu:Spin"
+                                   BasedOn="{StaticResource {x:Static pu:PendingBox.SpinStyleKey}}">
+                                <Setter Property="SpinStyle"
+                                        Value="Ring2" />
+                                <Setter Property="Width"
+                                        Value="50" />
+                                <Setter Property="Height"
+                                        Value="50" />
+                                <Setter Property="Margin"
+                                        Value="0,0,0,20" />
+                                <Setter Property="GlyphSize"
+                                        Value="2" />
+                                <Setter Property="GlyphBrush"
+                                        Value="#1ABBEA" />
+                            </Style>
+                        </pu:PendingBoxSettings.SpinStyle>
+                        <pu:PendingBoxSettings.ContentTemplate>
+                            <DataTemplate>
+                                <Grid VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <pu:Spin x:Name="PART_Spin" />
+                                    <TextBlock x:Name="PART_CaptionTextBlock"
+                                               Grid.Row="1"
+                                               Margin="5,5,0,0"
+                                               TextAlignment="Center" />
+                                    <TextBlock x:Name="PART_MessageTextBlock"
+                                               Grid.Row="2"
+                                               TextWrapping="Wrap"
+                                               TextAlignment="Center" />
+                                    <Button x:Name="PART_CancelButton"
+                                            Grid.Row="3"
+                                            Visibility="Collapsed"
+                                            HorizontalAlignment="Center"
+                                            Style="{x:Null}" />
+                                </Grid>
+                            </DataTemplate>
+                        </pu:PendingBoxSettings.ContentTemplate>
+                    </pu:PendingBoxSettings>
                 </ResourceDictionary>
                 <pu:StyleDictionary Includes="All" />
             </ResourceDictionary.MergedDictionaries>
