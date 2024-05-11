@@ -153,13 +153,13 @@
                HorizontalContentAlignment="Left"
                Background="Transparent"
                Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
-               Content="@TheOfficialFloW @PokerS" />
+               Content="@TheOfficialFloW @xfangfang @PokerS" />
         <Label x:Name="lbPPPwnVer"
                Grid.Row="2"
                FontSize="10"
                HorizontalContentAlignment="Right"
                Background="Transparent"
                Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
-               Content="PPPwn Version: " />
+               Content="PPPwnCPP" />
     </Grid>
 </pu:WindowX>

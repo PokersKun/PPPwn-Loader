@@ -7,7 +7,7 @@
             xmlns:pu="https://opensource.panuon.com/wpf-ui"
             mc:Ignorable="d"
             Title="Settings"
-            Height="220"
+            Height="240"
             Width="360"
             BorderThickness="1"
             Background="#FF4D5057"
@@ -18,6 +18,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" />
+            <RowDefinition />
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
@@ -76,6 +77,20 @@
                   pu:ComboBoxHelper.ItemsSelectedBackground="#FF3A3C41"
                   pu:ComboBoxHelper.ItemsHoverBackground="#FF3A3C41"
                   pu:DropDownHelper.ShadowColor="{x:Null}" />
+        <CheckBox Content="Auto Retry"
+                  x:Name="cbAuto"
+                  Foreground="White"
+                  Grid.Column="1"
+                  Margin="10,0,0,0"
+                  FontSize="14"
+                  Click="cbAuto_Click"
+                  pu:CheckBoxHelper.BoxWidth="16"
+                  pu:CheckBoxHelper.BoxHeight="16"
+                  pu:CheckBoxHelper.CornerRadius="8"
+                  IsChecked="True"
+                  pu:CheckBoxHelper.CheckedBorderBrush="#6CBCEA"
+                  pu:CheckBoxHelper.CheckedGlyphBrush="#6CBCEA"
+                  Grid.Row="3" />
         <Button x:Name="btnCheck"
                 Click="btnCheck_Click"
                 Grid.Column="1"
@@ -91,7 +106,7 @@
                 pu:ButtonHelper.HoverBackground="#FF3A3C41"
                 pu:ButtonHelper.ClickBackground="#FF3A3C41"
                 HorizontalAlignment="Left"
-                Grid.Row="3" />
+                Grid.Row="4" />
         <Button x:Name="btnApply"
                 Click="btnApply_Click"
                 Grid.Column="1"
@@ -107,6 +122,6 @@
                 pu:ButtonHelper.HoverBackground="#FF3A3C41"
                 pu:ButtonHelper.ClickBackground="#FF3A3C41"
                 HorizontalAlignment="Right"
-                Grid.Row="4" />
+                Grid.Row="5" />
     </Grid>
 </pu:WindowX>

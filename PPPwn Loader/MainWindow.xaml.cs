@@ -35,6 +35,7 @@ namespace PPPwn_Loader
         private string ethName = null;
         private string fwVersion = null;
         private string stage2Path = null;
+        private string autoRetry = null;
 
         private bool isFirstLine = true;
 
@@ -70,7 +71,8 @@ namespace PPPwn_Loader
             ethName = ConfigHelper.GetAppConfig("ethName");
             fwVersion = ConfigHelper.GetAppConfig("fwVersion");
             stage2Path = ConfigHelper.GetAppConfig("stage2Path");
-            lbPPPwnVer.Content = "PPPwn Version: v" + ConfigHelper.GetAppConfig("pppwnVer");
+            autoRetry = ConfigHelper.GetAppConfig("autoRetry");
+            lbPPPwnVer.Content = "PPPwnCPP v" + ConfigHelper.GetAppConfig("pppwnVer");
             if (!string.IsNullOrEmpty(stage2Path))
             {
                 btnFile.Content = "Stage2 File: " + stage2Path;
@@ -106,13 +108,34 @@ namespace PPPwn_Loader
             }
         }
 
+        private string GetInterfacePath(string interfaceName)
+        {
+            string result = string.Empty;
+            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+            foreach (NetworkInterface networkInterface in networkInterfaces)
+            {
+                if (networkInterface.Name == interfaceName)
+                {
+                    return "\\Device\\NPF_" + networkInterface.Id;
+                }
+            }
+            return result;
+        }
+
         private async Task RunPPPwn()
         {
             try
             {
+                string ethPath = GetInterfacePath(ethName);
                 string pppwnFath = @".\PPPwn\pppwn.exe";
                 string newFwVer = fwVersion.Replace(".", "");
-                string arguments = $"--interface=\"{ethName}\" --fw={newFwVer} --stage1=.\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2={stage2Path}";
+                string arguments = $"--interface {ethPath} --fw {newFwVer} --stage1 .\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2 {stage2Path}";
+                bool isStatge0 = false;
+
+                if (Convert.ToBoolean(autoRetry))
+                {
+                    arguments += " -a";
+                }
 
                 // 创建进程对象
                 using (Process process = new Process())
@@ -137,17 +160,18 @@ namespace PPPwn_Loader
                                 if (args.Data.Contains("STAGE 0"))
                                 {
                                     btnStart.Content = "STAGE 0";
-                                    pbProgress.Value = 20;
+                                    pbProgress.Value = 0;
+                                    isStatge0 = true;
                                 }
                                 else if (args.Data.Contains("STAGE 1"))
                                 {
                                     btnStart.Content = "STAGE 1";
-                                    pbProgress.Value = 40;
+                                    pbProgress.Value = 20;
                                 }
                                 else if (args.Data.Contains("STAGE 2"))
                                 {
                                     btnStart.Content = "STAGE 2";
-                                    pbProgress.Value = 60;
+                                    pbProgress.Value = 40;
                                 }
                                 else if (args.Data.Contains("STAGE 3"))
                                 {
@@ -174,7 +198,10 @@ namespace PPPwn_Loader
                                 {
                                     tbConsole.Text += "\n" + newItem;
                                 }
-                                lbStatus.Content = args.Data;
+                                if (isStatge0)
+                                {
+                                    lbStatus.Content = args.Data;
+                                }
                             });
                         }
                     };
@@ -188,19 +215,7 @@ namespace PPPwn_Loader
                     // 等待进程结束
                     await Task.Run(() => process.WaitForExit());
 
-                    if (lbStatus.Content.ToString().Contains("failed"))
-                    {
-                        var result = MessageBoxX.Show(this, lbStatus.Content.ToString() + " Retry it?", "Result", MessageBoxButton.OKCancel, MessageBoxIcon.None, DefaultButton.YesOK, 5);
-                        if (result == MessageBoxResult.Cancel)
-                        {
-                            RefreshUI(false);
-                        }
-                        else
-                        {
-                            await StartPPPwn();
-                        }
-                    }
-                    else if (lbStatus.Content.ToString().Contains("Done"))
+                    if (lbStatus.Content.ToString().Contains("Done"))
                     {
                         runningState = RunningState.STATE_READY;
                     }
@@ -316,7 +331,7 @@ namespace PPPwn_Loader
                 btnSettings.IsEnabled = false;
                 btnStart.Content = "WAIT";
                 btnStart.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#6CBCEA"));
-                lbStatus.Content = "Waiting for PPPoE connection...";
+                lbStatus.Content = "Exploit is running.";
                 runningState = RunningState.STATE_RUNNING;
             }
             else

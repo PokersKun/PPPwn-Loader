@@ -23,6 +23,7 @@ namespace PPPwn_Loader
 
         private string ethName = null;
         private string fwVersion = null;
+        private string autoRetry = null;
         private IPendingHandler updateHandler = null;
 
         public Settings(bool isAuto)
@@ -121,6 +122,8 @@ namespace PPPwn_Loader
                     Environment.Exit(0);
                 }
             }
+
+            cbAuto.IsChecked = Convert.ToBoolean(ConfigHelper.GetAppConfig("autoRetry"));
         }
 
         private void CheckNewVerison(bool isAuto)
@@ -235,7 +238,7 @@ namespace PPPwn_Loader
         private void CheckNewPPPwn(bool isAuto)
         {
             string userOrOrgName = "PokersKun";
-            string repoName = "PPPwn";
+            string repoName = "PPPwn_cpp";
             string currentVersion = ConfigHelper.GetAppConfig("pppwnVer");
 
             UpdateChecker checker = new UpdateChecker(userOrOrgName, repoName, currentVersion);
@@ -243,7 +246,7 @@ namespace PPPwn_Loader
             {
                 if (result != null)
                 {
-                    if (MessageBoxX.Show(this, "Check for new version for PPPwn, please update", "Tip", MessageBoxButton.OK) == MessageBoxResult.OK)
+                    if (MessageBoxX.Show(this, "Check for new version for PPPwnCPP, please update", "Tip", MessageBoxButton.OK) == MessageBoxResult.OK)
                     {
                         Task.Run(async () => await StartUpdatePPPwn(result.assets[0].browser_download_url, result.tag_name));
                     }
@@ -252,7 +255,7 @@ namespace PPPwn_Loader
                 {
                     if (!isAuto)
                     {
-                        Toast("PPPwn is up to date.");
+                        Toast("PPPwnCPP is up to date.");
                     }
                 }
             });
@@ -290,6 +293,12 @@ namespace PPPwn_Loader
                 double ny = Convert.ToDouble(y);
                 return nx.CompareTo(ny);
             }
+        }
+
+        private void cbAuto_Click(object sender, RoutedEventArgs e)
+        {
+            autoRetry = cbAuto.IsChecked.ToString();
+            ConfigHelper.UpdateAppConfig("autoRetry", autoRetry);
         }
     }
 }

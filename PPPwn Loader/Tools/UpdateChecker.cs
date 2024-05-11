@@ -203,7 +203,7 @@ namespace PPPwn_Loader.Tools
                     }
                     else
                     {
-                        callback("获取内容失败！");
+                        callback("{}");
                     }
                 };
                 webclient.DownloadStringAsync(new Uri(url));
