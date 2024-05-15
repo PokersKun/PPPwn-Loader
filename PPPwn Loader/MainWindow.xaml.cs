@@ -129,7 +129,7 @@ namespace PPPwn_Loader
                 string ethPath = GetInterfacePath(ethName);
                 string pppwnFath = @".\PPPwn\pppwn.exe";
                 string newFwVer = fwVersion.Replace(".", "");
-                string arguments = $"--interface {ethPath} --fw {newFwVer} --stage1 .\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2 {stage2Path}";
+                string arguments = $"--interface {ethPath} --fw {newFwVer} --stage1 .\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2 '{stage2Path}'";
                 bool isStatge0 = false;
 
                 if (Convert.ToBoolean(autoRetry))
