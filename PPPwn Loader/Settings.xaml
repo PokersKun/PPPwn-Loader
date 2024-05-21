@@ -7,7 +7,7 @@
             xmlns:pu="https://opensource.panuon.com/wpf-ui"
             mc:Ignorable="d"
             Title="Settings"
-            Height="240"
+            Height="250"
             Width="360"
             BorderThickness="1"
             Background="#FF4D5057"
@@ -23,7 +23,7 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="25" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -123,5 +123,20 @@
                 pu:ButtonHelper.ClickBackground="#FF3A3C41"
                 HorizontalAlignment="Right"
                 Grid.Row="5" />
+        <Label Grid.Row="6"
+               Grid.ColumnSpan="2"
+               FontSize="10"
+               HorizontalContentAlignment="Left"
+               Background="Transparent"
+               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+               Content="@TheOfficialFloW @xfangfang @PokerS" />
+        <Label x:Name="lbPPPwnVer"
+               Grid.Row="6"
+               Grid.Column="1"
+               FontSize="10"
+               HorizontalContentAlignment="Right"
+               Background="Transparent"
+               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
+               Content="PPPwnCPP" />
     </Grid>
 </pu:WindowX>

@@ -3,6 +3,7 @@ using Panuon.WPF.UI;
 using PPPwn_Loader.Tools;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -28,13 +29,11 @@ namespace PPPwn_Loader
             STATE_RUNNING
         }
 
-        private string[] allFwVersion = { "8.50", "9.00", "9.03", "9.04", "9.50", "9.60", "10.00", "10.01", "10.50", "10.70", "10.71", "11.00" };
-
         private RunningState runningState = RunningState.STATE_NOT_READY;
 
         private string ethName = null;
         private string fwVersion = null;
-        private string stage2Path = null;
+        private string stage2Path = @".\Stage2\stage2.bin";
         private string autoRetry = null;
 
         private bool isFirstLine = true;
@@ -70,10 +69,14 @@ namespace PPPwn_Loader
         {
             ethName = ConfigHelper.GetAppConfig("ethName");
             fwVersion = ConfigHelper.GetAppConfig("fwVersion");
-            stage2Path = ConfigHelper.GetAppConfig("stage2Path");
             autoRetry = ConfigHelper.GetAppConfig("autoRetry");
-            lbPPPwnVer.Content = "PPPwnCPP v" + ConfigHelper.GetAppConfig("pppwnVer");
-            if (!string.IsNullOrEmpty(stage2Path))
+
+            if (!string.IsNullOrEmpty(ethName) && !string.IsNullOrEmpty(fwVersion))
+            {
+                lbSettings.Content = $"Interface: {ethName}    Firmware: {fwVersion}";
+            }
+
+            if (File.Exists(stage2Path))
             {
                 btnFile.Content = "Stage2 File: " + stage2Path;
             }
@@ -85,6 +88,8 @@ namespace PPPwn_Loader
 
         private void LoadStage2File()
         {
+            string filePath = null;
+
             // 创建文件选择框对象
             OpenFileDialog openFileDialog = new OpenFileDialog();
 
@@ -97,10 +102,18 @@ namespace PPPwn_Loader
             // 检查是否选择了文件
             if (result == true)
             {
-                // 获取选定的文件路径并保存到全局变量中
-                stage2Path = openFileDialog.FileName;
-                btnFile.Content = "Stage2 File: " + stage2Path;
-                ConfigHelper.UpdateAppConfig("stage2Path", stage2Path);
+                // 拷贝文件到指定工作目录下
+                filePath = openFileDialog.FileName;
+                if (File.Exists(filePath))
+                {
+                    File.Copy(filePath, stage2Path, true);
+                    btnFile.Content = "Stage2 File: " + stage2Path;
+                    Toast($"The Stage2 File has been copied to {stage2Path}.");
+                }
+                else
+                {
+                    Toast("The Stage2 File does not exist.");
+                }
             }
             else
             {
@@ -129,7 +142,7 @@ namespace PPPwn_Loader
                 string ethPath = GetInterfacePath(ethName);
                 string pppwnFath = @".\PPPwn\pppwn.exe";
                 string newFwVer = fwVersion.Replace(".", "");
-                string arguments = $"--interface {ethPath} --fw {newFwVer} --stage1 .\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2 '{stage2Path}'";
+                string arguments = $"--interface {ethPath} --fw {newFwVer} --stage1 .\\PPPwn\\stage1\\{newFwVer}\\stage1.bin --stage2 .\\Stage2\\stage2.bin";
                 bool isStatge0 = false;
 
                 if (Convert.ToBoolean(autoRetry))
@@ -141,9 +154,7 @@ namespace PPPwn_Loader
                 using (Process process = new Process())
                 {
                     process.StartInfo.FileName = pppwnFath; // 设置要执行的程序路径
-                    process.StartInfo.Arguments = arguments; // 设置程序参数
-
-                    Console.WriteLine(pppwnFath + " " + arguments);
+                    process.StartInfo.Arguments = " " + arguments; // 设置程序参数
 
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.UseShellExecute = false;
@@ -296,7 +307,7 @@ namespace PPPwn_Loader
 
         private void StatusChanged()
         {
-            if (!string.IsNullOrEmpty(ethName) && !string.IsNullOrEmpty(fwVersion) && !string.IsNullOrEmpty(stage2Path))
+            if (!string.IsNullOrEmpty(ethName) && !string.IsNullOrEmpty(fwVersion) && File.Exists(stage2Path))
             {
                 runningState = RunningState.STATE_READY;
                 btnStart.Content = "START";
@@ -315,7 +326,7 @@ namespace PPPwn_Loader
                     }
                     OpenSettings(true);
                 }
-                if (string.IsNullOrEmpty(stage2Path))
+                if (!File.Exists(stage2Path))
                 {
                     runningState = RunningState.STATE_REQ_STAGE2;
                 }

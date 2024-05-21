@@ -32,7 +32,7 @@ namespace PPPwn_Loader
             _isAuto = isAuto;
         }
 
-        private void WindowX_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void WindowX_Loaded(object sender, RoutedEventArgs e)
         {
             if (_isAuto)
             {
@@ -96,7 +96,7 @@ namespace PPPwn_Loader
                 }
                 Array.Sort(allFwVersion, new NumericComparer());
                 Array.Reverse(allFwVersion);
-                string[] formattedallFwVersion = allFwVersion.Select(name => (Convert.ToDouble(name) / 100).ToString("0.00")).ToArray();
+                string[] formattedallFwVersion = allFwVersion.Select(name => (name.Insert(name.Length - 2, "."))).ToArray();
 
                 cbFwVer.ItemsSource = formattedallFwVersion;
             }
@@ -124,6 +124,8 @@ namespace PPPwn_Loader
             }
 
             cbAuto.IsChecked = Convert.ToBoolean(ConfigHelper.GetAppConfig("autoRetry"));
+
+            lbPPPwnVer.Content = "PPPwnCPP v" + ConfigHelper.GetAppConfig("pppwnVer");
         }
 
         private void CheckNewVerison(bool isAuto)
@@ -201,19 +203,49 @@ namespace PPPwn_Loader
             }
         }
 
+        private void CopyDirectory(string sourceDir, string destinationDir)
+        {
+            DirectoryInfo dir = new DirectoryInfo(sourceDir);
+
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(
+                    "Source directory does not exist or could not be found: "
+                    + sourceDir);
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+            Directory.CreateDirectory(destinationDir);
+
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destinationDir, file.Name);
+                file.CopyTo(tempPath, false);
+            }
+
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destinationDir, subdir.Name);
+                CopyDirectory(subdir.FullName, tempPath);
+            }
+        }
+
         private async Task StartUpdatePPPwn(string url, string version)
         {
             updateHandler = PendingBox.Show(this, "Start updating PPPwn...");
             string downloadPath = @".\pppwn-update.zip";
-            string extractPath = @".\PPPwn";
+            string targetPath = @".\PPPwn";
+            string backupPath = @".\PPPwn_bak";
+            CopyDirectory(targetPath, backupPath);
 
             try
             {
                 await DownloadFileAsync(url, downloadPath);
                 updateHandler.UpdateMessage("Download completed.");
-                DeleteDirectory("PPPwn");
-                Directory.CreateDirectory("PPPwn");
-                ExtractZip(downloadPath, extractPath);
+                DeleteDirectory(targetPath);
+                Directory.CreateDirectory(targetPath);
+                ExtractZip(downloadPath, targetPath);
                 updateHandler.UpdateMessage("Extraction completed.");
                 File.Delete(downloadPath);
                 ConfigHelper.UpdateAppConfig("pppwnVer", version.Replace("v", ""));
@@ -223,6 +255,7 @@ namespace PPPwn_Loader
                 {
                     Toast("PPPwn has been updated.");
                 });
+                DeleteDirectory(backupPath);
             }
             catch (Exception ex)
             {
@@ -232,6 +265,8 @@ namespace PPPwn_Loader
                     Console.WriteLine(ex.Message);
                     Toast($"An error occurred: {ex.Message}");
                 });
+                DeleteDirectory(targetPath);
+                Directory.Move(backupPath, targetPath);
             }
         }
 

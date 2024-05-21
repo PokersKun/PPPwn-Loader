@@ -148,18 +148,12 @@
                        HorizontalContentAlignment="Center" />
             </WrapPanel>
         </StackPanel>
-        <Label Grid.Row="2"
-               FontSize="10"
-               HorizontalContentAlignment="Left"
-               Background="Transparent"
-               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
-               Content="@TheOfficialFloW @xfangfang @PokerS" />
-        <Label x:Name="lbPPPwnVer"
+        <Label x:Name="lbSettings"
+               Content=""
+               FontSize="12"
                Grid.Row="2"
-               FontSize="10"
-               HorizontalContentAlignment="Right"
                Background="Transparent"
-               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}"
-               Content="PPPwnCPP" />
+               HorizontalContentAlignment="Center"
+               Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
     </Grid>
 </pu:WindowX>
