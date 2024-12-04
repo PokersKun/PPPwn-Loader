@@ -1,5 +1,7 @@
 # PPPwn Loader
 [中文](README_CN.md)
+
+Deprecated, check out the [PPPwn-Lite](https://github.com/PSGO/PPPwn-Lite) repository.
 ## Overview
 A Windows front-end desktop program based on [PPPwn](https://github.com/TheOfficialFloW/PPPwn) that aims to reduce the environmental dependencies needed to run PPPwn, and implement one-click RCE in the simplest way possible.
 ## Technology

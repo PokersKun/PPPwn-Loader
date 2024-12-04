@@ -1,5 +1,7 @@
 # PPPwn Loader
 [English](README.md)
+
+已弃用，请查看 [PPPwn-Lite](https://github.com/PSGO/PPPwn-Lite) 仓库。
 ## 概述
 一个基于 [PPPwn](https://github.com/TheOfficialFloW/PPPwn) 的 Windows 前端桌面程序，致力于减轻运行 PPPwn 所需要的环境依赖，用最简单的方式实现一键 RCE。
 ## 技术
